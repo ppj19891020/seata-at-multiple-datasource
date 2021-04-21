@@ -2,7 +2,6 @@ package com.fly.seata.service.impl;
 
 import com.fly.seata.common.OperationResponse;
 import com.fly.seata.common.order.Order;
-import com.fly.seata.common.order.OrderStatus;
 import com.fly.seata.common.order.PlaceOrderRequestVO;
 import com.fly.seata.config.DataSourceKey;
 import com.fly.seata.config.DynamicDataSourceContextHolder;
@@ -37,39 +36,27 @@ public class OrderServiceImpl implements OrderService {
     public OperationResponse normalPlaceOrder(String type,PlaceOrderRequestVO placeOrderRequestVO)
         throws Exception {
         log.info("=============ORDER=================");
-        DynamicDataSourceContextHolder.setDataSourceKey(DataSourceKey.ORDER);
+        DynamicDataSourceContextHolder.setDataSourceKey(DataSourceKey.STORAGE);
         log.info("当前 XID: {}", RootContext.getXID());
-
         Integer amount = 1;
-        Integer price = placeOrderRequestVO.getPrice();
-
-        Order order = Order.builder()
-            .userId(placeOrderRequestVO.getUserId())
-            .productId(placeOrderRequestVO.getProductId())
-            .money(price)
-            .count(1)
-            .build();
-
-        Integer saveOrderRecord = orderDao.insertOrder(order);
-
-        log.info("保存订单{}", saveOrderRecord > 0 ? "成功" : "失败");
-
-        boolean operationStorageResult = false;
-        if("hot".equalsIgnoreCase(type)){
-            // 扣减库存
-            operationStorageResult = storageService.reduceStock(placeOrderRequestVO.getProductId(), amount);
-            if( !operationStorageResult ){
-                throw new RuntimeException("下单失败");
-            }
-        }else{
-            operationStorageResult = storageService.insert() > 0 ? true:false;
-            if( !operationStorageResult ){
-                throw new RuntimeException("下单失败");
-            }
+        // 扣减库存
+        boolean operationStorageResult = storageService.reduceStock(placeOrderRequestVO.getProductId(), amount);
+        if( !operationStorageResult ){
+            throw new RuntimeException("下单失败");
         }
-        return OperationResponse.builder()
-            .success(operationStorageResult)
-            .build();
+        if(operationStorageResult){
+            Integer price = placeOrderRequestVO.getPrice();
+            Order order = Order.builder()
+                .userId(placeOrderRequestVO.getUserId())
+                .productId(placeOrderRequestVO.getProductId())
+                .money(price)
+                .count(1)
+                .build();
+            DynamicDataSourceContextHolder.setDataSourceKey(DataSourceKey.ORDER);
+            orderDao.insertOrder(order);
+            return OperationResponse.builder().success(operationStorageResult).build();
+        }
+        return OperationResponse.builder().success(false).build();
     }
 
     @GlobalTransactional
@@ -77,37 +64,27 @@ public class OrderServiceImpl implements OrderService {
     public OperationResponse seataPlaceOrder(String type,PlaceOrderRequestVO placeOrderRequestVO)
         throws Exception {
         log.info("=============ORDER=================");
-        DynamicDataSourceContextHolder.setDataSourceKey(DataSourceKey.ORDER);
+        DynamicDataSourceContextHolder.setDataSourceKey(DataSourceKey.STORAGE);
         log.info("当前 XID: {}", RootContext.getXID());
-
         Integer amount = 1;
-        Integer price = placeOrderRequestVO.getPrice();
-
-        Order order = Order.builder()
-            .userId(placeOrderRequestVO.getUserId())
-            .productId(placeOrderRequestVO.getProductId())
-            .money(price)
-            .count(1)
-            .build();
-        Integer saveOrderRecord = orderDao.insertOrder(order);
-        log.info("保存订单{}", saveOrderRecord > 0 ? "成功" : "失败");
         // 扣减库存
-        boolean operationStorageResult = false;
-        if("hot".equalsIgnoreCase(type)){
-            // 扣减库存
-            operationStorageResult = storageService.reduceStock(placeOrderRequestVO.getProductId(), amount);
-            if( !operationStorageResult ){
-                throw new RuntimeException("下单失败");
-            }
-        }else{
-            operationStorageResult = storageService.insert() > 0 ? true:false;
-            if( !operationStorageResult ){
-                throw new RuntimeException("下单失败");
-            }
+        boolean operationStorageResult = storageService.reduceStock(placeOrderRequestVO.getProductId(), amount);
+        if( !operationStorageResult ){
+            throw new RuntimeException("下单失败");
         }
-        return OperationResponse.builder()
-            .success(operationStorageResult)
-            .build();
+        if(operationStorageResult){
+            Integer price = placeOrderRequestVO.getPrice();
+            Order order = Order.builder()
+                .userId(placeOrderRequestVO.getUserId())
+                .productId(placeOrderRequestVO.getProductId())
+                .money(price)
+                .count(1)
+                .build();
+            DynamicDataSourceContextHolder.setDataSourceKey(DataSourceKey.ORDER);
+            orderDao.insertOrder(order);
+            return OperationResponse.builder().success(operationStorageResult).build();
+        }
+        return OperationResponse.builder().success(false).build();
     }
 
 }

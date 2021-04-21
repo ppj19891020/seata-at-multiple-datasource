@@ -15,7 +15,7 @@ public interface OrderDao extends BaseMapper<Order> {
      * 插入订单
      * @param order
      */
-    @Insert({"INSERT INTO `order`(`user_id`, `product_id`, `count`, `money`) VALUES (#{userId},#{productId},#{count},#{money})"})
+    @Insert({"INSERT INTO `orders`(`product_id`, `sum`) VALUES (#{productId},#{count})"})
     int insertOrder(Order order);
 
 

@@ -25,17 +25,27 @@ public class OrderController {
 
     @PostMapping("/normal/placeOrder")
     @ResponseBody
-    public OperationResponse normalPlaceOrder(HttpServletRequest request,@RequestBody PlaceOrderRequestVO placeOrderRequestVO) throws Exception {
+    public String normalPlaceOrder(HttpServletRequest request,@RequestBody PlaceOrderRequestVO placeOrderRequestVO) throws Exception {
         log.info("收到下单请求,用户:{}, 商品:{}", placeOrderRequestVO.getUserId(), placeOrderRequestVO.getProductId());
         String type = request.getHeader("type");
-        return orderService.normalPlaceOrder(type,placeOrderRequestVO);
+        OperationResponse operationResponse =  orderService.normalPlaceOrder(type,placeOrderRequestVO);
+        if(operationResponse.isSuccess()){
+            return "ok";
+        }else{
+            return "fail";
+        }
     }
 
     @PostMapping("/seata/placeOrder")
     @ResponseBody
-    public OperationResponse seataPlaceOrder(HttpServletRequest request,@RequestBody PlaceOrderRequestVO placeOrderRequestVO) throws Exception {
+    public String seataPlaceOrder(HttpServletRequest request,@RequestBody PlaceOrderRequestVO placeOrderRequestVO) throws Exception {
         log.info("收到下单请求,用户:{}, 商品:{}", placeOrderRequestVO.getUserId(), placeOrderRequestVO.getProductId());
         String type = request.getHeader("type");
-        return orderService.seataPlaceOrder(type,placeOrderRequestVO);
+        OperationResponse operationResponse = orderService.seataPlaceOrder(type,placeOrderRequestVO);
+        if(operationResponse.isSuccess()){
+            return "ok";
+        }else{
+            return "fail";
+        }
     }
 }

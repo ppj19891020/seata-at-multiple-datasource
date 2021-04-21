@@ -30,7 +30,7 @@ public class StorageServiceImpl implements StorageService {
      * @return
      * @throws Exception
      */
-//    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     @Override
     public boolean reduceStock(Long productId, Integer amount) throws Exception {
         log.info("=============STORAGE=================");
@@ -43,11 +43,6 @@ public class StorageServiceImpl implements StorageService {
         Integer record = productDao.reduce(productId,amount);
         log.info("扣减 {} 库存结果:{}", productId, record > 0 ? "操作成功" : "扣减库存失败");
         return record > 0;
-    }
-
-    @Override
-    public int insert() {
-        return productDao.insert();
     }
 
     private void checkStock(Long productId, Integer requiredAmount) throws Exception {

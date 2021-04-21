@@ -5,8 +5,6 @@ package com.fly.seata.service;
  */
 public interface StorageService {
 
-    int insert();
-
     /**
      * 扣减库存
      *
