@@ -48,4 +48,17 @@ public class OrderController {
             return "fail";
         }
     }
+
+    @PostMapping("/seata/placeOrder2")
+    @ResponseBody
+    public String seataPlaceOrder2(HttpServletRequest request,@RequestBody PlaceOrderRequestVO placeOrderRequestVO) throws Exception {
+        log.info("收到下单请求,用户:{}, 商品:{}", placeOrderRequestVO.getUserId(), placeOrderRequestVO.getProductId());
+        String type = request.getHeader("type");
+        OperationResponse operationResponse = orderService.seataPlaceOrder2(type,placeOrderRequestVO);
+        if(operationResponse.isSuccess()){
+            return "ok";
+        }else{
+            return "fail";
+        }
+    }
 }

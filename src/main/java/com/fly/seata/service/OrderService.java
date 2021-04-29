@@ -19,4 +19,6 @@ public interface OrderService {
 
     OperationResponse seataPlaceOrder(String type,PlaceOrderRequestVO placeOrderRequestVO) throws Exception;
 
+    OperationResponse seataPlaceOrder2(String type,PlaceOrderRequestVO placeOrderRequestVO) throws Exception;
+
 }

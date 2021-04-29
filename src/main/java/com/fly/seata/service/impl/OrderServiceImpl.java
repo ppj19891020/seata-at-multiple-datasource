@@ -87,4 +87,30 @@ public class OrderServiceImpl implements OrderService {
         return OperationResponse.builder().success(false).build();
     }
 
+    @GlobalTransactional
+    @Override
+    public OperationResponse seataPlaceOrder2(String type, PlaceOrderRequestVO placeOrderRequestVO)
+        throws Exception {
+        log.info("=============ORDER=================");
+        DynamicDataSourceContextHolder.setDataSourceKey(DataSourceKey.STORAGE);
+        log.info("当前 XID: {}", RootContext.getXID());
+        Integer amount = 1;
+
+        Integer price = placeOrderRequestVO.getPrice();
+        Order order = Order.builder()
+            .userId(placeOrderRequestVO.getUserId())
+            .productId(placeOrderRequestVO.getProductId())
+            .money(price)
+            .count(1)
+            .build();
+        DynamicDataSourceContextHolder.setDataSourceKey(DataSourceKey.ORDER);
+        orderDao.insertOrder(order);
+
+        // 扣减库存
+        boolean operationStorageResult = storageService.reduceStock(placeOrderRequestVO.getProductId(), amount);
+        if( !operationStorageResult ){
+            throw new RuntimeException("下单失败");
+        }
+        return OperationResponse.builder().success(true).build();
+    }
 }
