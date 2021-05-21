@@ -6,6 +6,7 @@ import com.fly.seata.service.OrderService;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,10 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    @Value("${service.disableGlobalTransaction}")
+    private Boolean disableGlobalTransaction;
+
+
     @PostMapping("/normal/placeOrder")
     @ResponseBody
     public String normalPlaceOrder(HttpServletRequest request,@RequestBody PlaceOrderRequestVO placeOrderRequestVO) throws Exception {
@@ -39,7 +44,7 @@ public class OrderController {
     @PostMapping("/seata/placeOrder")
     @ResponseBody
     public String seataPlaceOrder(HttpServletRequest request,@RequestBody PlaceOrderRequestVO placeOrderRequestVO) throws Exception {
-        log.info("收到下单请求,用户:{}, 商品:{}", placeOrderRequestVO.getUserId(), placeOrderRequestVO.getProductId());
+        log.info("收到下单请求,用户:{}, 商品:{} disableGlobalTransaction:{}", placeOrderRequestVO.getUserId(), placeOrderRequestVO.getProductId(),disableGlobalTransaction);
         String type = request.getHeader("type");
         OperationResponse operationResponse = orderService.seataPlaceOrder(type,placeOrderRequestVO);
         if(operationResponse.isSuccess()){

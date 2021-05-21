@@ -1,0 +1,33 @@
+## pk配置
+pk:
+  project:
+    name: apollo-script-test
+
+## apollo接入
+app:
+  id: seata-demo
+apollo:
+  bootstrap:
+    enabled: true
+    namespaces: application,framework.seata-common
+  meta: http://apollo-meta-dev.fe.host.dxy:88
+
+## Seata接入
+seata:
+  ## 配置中心采用apollo
+  config:
+    type: apollo
+    apollo:
+      apollo-meta: http://apollo-meta-dev.fe.host.dxy:88
+      app-id: seata-demo
+      namespace: framework.seata-common
+  ## 注册中心采用redis
+  registry:
+    type: redis
+    redis:
+      server-addr: 192.168.202.184:6380
+      password: 5EOLPU6bnF01EcNeV4FEw2STVvP
+
+logging:
+  level:
+    Root: info
