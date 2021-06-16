@@ -27,7 +27,14 @@ seata:
     redis:
       server-addr: 192.168.202.184:6380
       password: 5EOLPU6bnF01EcNeV4FEw2STVvP
+#      server-addr: 192.168.202.26:7393
+#      password: yiff2dritnoBlikBeggUrgOnhygAb
+#  registry:
+#    type: zk
+#    zk:
+#      serverAddr: 192.168.202.137:2181
 
 logging:
   level:
     Root: info
+

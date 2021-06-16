@@ -30,7 +30,7 @@ public class StorageServiceImpl implements StorageService {
      * @return
      * @throws Exception
      */
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+//    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
     @Override
     public boolean reduceStock(Long productId, Integer amount) throws Exception {
         log.info("=============STORAGE=================");

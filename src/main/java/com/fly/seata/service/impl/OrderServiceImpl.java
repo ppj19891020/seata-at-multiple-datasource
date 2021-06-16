@@ -14,6 +14,7 @@ import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -60,6 +61,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @GlobalTransactional
+    @Transactional
     @Override
     public OperationResponse seataPlaceOrder(String type,PlaceOrderRequestVO placeOrderRequestVO)
         throws Exception {
@@ -88,6 +90,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @GlobalTransactional
+    @Transactional
     @Override
     public OperationResponse seataPlaceOrder2(String type, PlaceOrderRequestVO placeOrderRequestVO)
         throws Exception {
