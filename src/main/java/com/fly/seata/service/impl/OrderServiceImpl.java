@@ -60,8 +60,6 @@ public class OrderServiceImpl implements OrderService {
         return OperationResponse.builder().success(false).build();
     }
 
-    @GlobalTransactional
-    @Transactional
     @Override
     public OperationResponse seataPlaceOrder(String type,PlaceOrderRequestVO placeOrderRequestVO)
         throws Exception {
@@ -89,8 +87,6 @@ public class OrderServiceImpl implements OrderService {
         return OperationResponse.builder().success(false).build();
     }
 
-    @GlobalTransactional
-    @Transactional
     @Override
     public OperationResponse seataPlaceOrder2(String type, PlaceOrderRequestVO placeOrderRequestVO)
         throws Exception {

@@ -18,6 +18,4 @@ public interface OrderDao extends BaseMapper<Order> {
     @Insert({"INSERT INTO `orders`(`product_id`, `sum`) VALUES (#{productId},#{count})"})
     int insertOrder(Order order);
 
-
-
 }
